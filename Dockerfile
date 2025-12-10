@@ -74,6 +74,9 @@ RUN mkdir -p /root/.config/.wrangler && \
 # Make bindings script executable
 RUN chmod +x /app/bindings.sh
 
+# Instalar wrangler CLI
+RUN npm install -g wrangler
+
 EXPOSE 5173
 
 # Healthcheck for deployment platforms
