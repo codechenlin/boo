@@ -1,27 +1,34 @@
 version: "3.9"
 
 services:
-  app-prod:
-    container_name: bolt-app-prod
+  bolt-app:
+    container_name: bolt-app
     build:
       context: .
       dockerfile: Dockerfile
-      target: bolt-ai-production
+      target: bolt-ai-production   # usa la etapa de producción del Dockerfile
     image: bolt-ai:production
     ports:
       - "5173:5173"
-    env_file: 
+    env_file:
       - ".env"
       - ".env.local"
     environment:
       - NODE_ENV=production
       - PORT=5173
       - RUNNING_IN_DOCKER=true
-      # API keys (Coolify las inyecta desde variables de entorno)
+      # Claves de proveedores (Coolify las inyecta desde variables de entorno)
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
       - GROQ_API_KEY=${GROQ_API_KEY}
+      - GOOGLE_GENERATIVE_AI_API_KEY=${GOOGLE_GENERATIVE_AI_API_KEY}
+      - OLLAMA_API_BASE_URL=${OLLAMA_API_BASE_URL}
+      - TOGETHER_API_KEY=${TOGETHER_API_KEY}
+      - TOGETHER_API_BASE_URL=${TOGETHER_API_BASE_URL}
+      - AWS_BEDROCK_CONFIG=${AWS_BEDROCK_CONFIG}
+      - VITE_LOG_LEVEL=${VITE_LOG_LEVEL:-debug}
+      - DEFAULT_NUM_CTX=${DEFAULT_NUM_CTX:-32768}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: pnpm run dockerstart
-    profiles:
-      - production
